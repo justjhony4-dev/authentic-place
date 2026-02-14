@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Politique de confidentialité | Authentic Place</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <meta name="description" content="{% block meta_description %}Achetez et vendez localement sur Authentic Place.{% endblock %}">
+  <meta name="keywords" content="marketplace, haïti, vente en ligne, produits locaux">
+  <meta name="author" content="Authentic Place">
+
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="{% block og_title %}Authentic Place{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Marketplace locale fiable{% endblock %}">
+  <meta property="og:image" content="{% static 'images/og-image.png' %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="website">
+  <link rel="apple-touch-icon" href="{% static 'favicon-32x32.png' %}">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+<nav class="bg-blue-800 text-white p-4">
+  <div class="max-w-7xl mx-auto font-bold">Authentic Place</div>
+</nav>
+
+<section class="max-w-5xl mx-auto bg-white mt-10 p-8 rounded-xl shadow">
+  <h1 class="text-3xl font-extrabold text-blue-800 mb-6">
+    Politique de confidentialité
+  </h1>
+
+  <p class="mb-4">
+    Authentic Place respecte la vie privée de ses utilisateurs.
+  </p>
+
+  <h2 class="font-bold mt-4 mb-2">Données collectées</h2>
+  <p>
+    Nous collectons uniquement les informations nécessaires : nom, email,
+    numéro WhatsApp et informations de boutique.
+  </p>
+
+  <h2 class="font-bold mt-4 mb-2">Utilisation</h2>
+  <p>
+    Ces données servent uniquement à faciliter la mise en relation
+    entre vendeurs et clients.
+  </p>
+
+  <h2 class="font-bold mt-4 mb-2">Sécurité</h2>
+  <p>
+    Nous mettons en place des mesures de sécurité pour protéger vos données.
+  </p>
+</section>
+
+<footer class="bg-blue-700 text-white py-10 mt-16">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+
+    <div>
+      <h4 class="font-bold mb-2">Authentic Place</h4>
+      <p class="opacity-80">
+        Achetez & vendez en toute confiance.
+      </p>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Pages</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'about' %}" class="hover:underline">À propos</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:underline">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Légal</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'terms' %}" class="hover:underline">Conditions</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:underline">Confidentialité</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <p class="text-center text-xs opacity-70 mt-8">
+    © 2025 Authentic Place • Made in Haiti 🇭🇹
+  </p>
+</footer>
+
+
+</body>
+</html>

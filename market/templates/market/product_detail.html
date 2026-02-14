@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ product.name }} | Authentic Place</title>
+  <meta name="description" content="{% block meta_description %}Achetez et vendez localement sur Authentic Place.{% endblock %}">
+  <meta name="keywords" content="marketplace, haïti, vente en ligne, produits locaux">
+  <meta name="author" content="Authentic Place">
+
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="{% block og_title %}Authentic Place{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Marketplace locale fiable{% endblock %}">
+  <meta property="og:image" content="{% static 'images/og-image.png' %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="website">
+  <!-- FAVICON -->
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'favicon-32x32.png' %}">
+
+  <!-- TAILWIND -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+<!-- ================= NAVBAR ================= -->
+<nav class="bg-gradient-to-r from-blue-800 to-blue-600 text-white sticky top-0 z-50 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+
+    <a href="{% url 'home' %}" class="flex items-center gap-3">
+      <img src="{% static 'logo-auth.png' %}" class="h-10" alt="Authentic Place">
+      <span class="text-xl font-extrabold">
+        Authentic <span class="text-yellow-400">Place</span>
+      </span>
+    </a>
+
+    <div class="hidden md:flex gap-6 text-sm font-semibold">
+      <a href="{% url 'home' %}" class="hover:text-yellow-300">Accueil</a>
+      <a href="{% url 'vendor_register' %}" class="hover:text-yellow-300">Devenir vendeur</a>
+      <a href="{% url 'vendor_login' %}"
+         class="bg-white text-blue-800 px-4 py-2 rounded-full font-bold hover:bg-yellow-400 transition">
+        Connexion
+      </a>
+    </div>
+
+    <button id="menuBtn" class="md:hidden text-2xl">☰</button>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div id="mobileMenu" class="hidden md:hidden bg-blue-700 px-4 pb-4 space-y-3 text-sm font-semibold">
+    <a href="{% url 'home' %}" class="block hover:text-yellow-300">Accueil</a>
+    <a href="{% url 'vendor_register' %}" class="block hover:text-yellow-300">Devenir vendeur</a>
+    <a href="{% url 'vendor_login' %}" class="block text-yellow-300">Connexion</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="bg-gradient-to-r from-blue-700 to-blue-500 text-white text-center py-20 px-4">
+  <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+    {{ product.name }}
+  </h1>
+  <p class="max-w-xl mx-auto text-lg opacity-90">
+    Achetez local • Contactez le vendeur directement
+  </p>
+</header>
+
+<!-- ================= PRODUIT ================= -->
+<section class="max-w-6xl mx-auto -mt-14 px-4">
+  <div class="bg-white rounded-2xl shadow-xl p-8 grid grid-cols-1 md:grid-cols-2 gap-10">
+
+    <!-- IMAGE -->
+    <div class="overflow-hidden rounded-xl shadow-md bg-gray-100">
+      <img
+        src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'default-product.png' %}{% endif %}"
+        alt="{{ product.name }}"
+        class="w-full h-full object-cover transition-transform duration-300 hover:scale-105">
+    </div>
+
+    <!-- INFOS -->
+    <div class="flex flex-col justify-between">
+
+      <div>
+        <p class="text-blue-700 font-extrabold text-3xl mb-4">
+          {{ product.price }} HTG
+        </p>
+
+        <p class="text-gray-700 leading-relaxed mb-6">
+          {{ product.description }}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-2 mb-6">
+          <span class="font-semibold">Vendu par :</span>
+          <a href="{% url 'vendor_detail' product.vendor.pk %}"
+             class="text-blue-600 hover:underline font-semibold">
+            {{ product.vendor.name }}
+          </a>
+
+          {% if product.vendor.is_verified %}
+            <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-bold">
+              ✔ Vérifié
+            </span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- BOUTON WHATSAPP -->
+      <a href="https://wa.me/{{ product.vendor.whatsapp_number }}?text=Bonjour,%20je%20souhaite%20commander%20le%20produit%20{{ product.name }}"
+         target="_blank"
+         class="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-xl text-center font-bold text-lg transition shadow-lg">
+        💬 Commander via WhatsApp
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-blue-700 text-white py-10 mt-20">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+
+    <div>
+      <h4 class="font-bold mb-2">Authentic Place</h4>
+      <p class="opacity-80">
+        Achetez & vendez en toute confiance.
+      </p>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Pages</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'about' %}" class="hover:underline">À propos</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:underline">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Légal</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'terms' %}" class="hover:underline">Conditions</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:underline">Confidentialité</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <p class="text-center text-xs opacity-70 mt-8">
+    © 2025 Authentic Place • Made in Haiti 🇭🇹
+  </p>
+</footer>
+
+<!-- ================= SCRIPT MENU ================= -->
+<script>
+  const btn = document.getElementById("menuBtn");
+  const menu = document.getElementById("mobileMenu");
+  btn.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
+  });
+</script>
+
+</body>
+</html>

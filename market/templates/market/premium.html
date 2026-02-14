@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Passer Premium | Authentic Place</title>
+  <meta name="description" content="{% block meta_description %}Achetez et vendez localement sur Authentic Place.{% endblock %}">
+  <meta name="keywords" content="marketplace, haïti, vente en ligne, produits locaux">
+  <meta name="author" content="Authentic Place">
+
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="{% block og_title %}Authentic Place{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Marketplace locale fiable{% endblock %}">
+  <meta property="og:image" content="{% static 'images/og-image.png' %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="website">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'favicon-32x32.png' %}">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+<!-- NAVBAR -->
+<nav class="bg-gradient-to-r from-blue-700 to-blue-600 text-white shadow">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="{% url 'home' %}" class="flex items-center gap-2">
+      <img src="{% static 'logo-auth.png' %}" class="h-9 w-9">
+      <span class="font-extrabold text-xl">
+        Authentic <span class="text-yellow-400">Place</span>
+      </span>
+    </a>
+
+    <a href="{% url 'vendor_dashboard' %}"
+       class="bg-white text-blue-700 px-4 py-2 rounded-full font-semibold hover:bg-yellow-400">
+      Mon Dashboard
+    </a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header class="bg-gradient-to-r from-blue-700 to-blue-500 text-white text-center py-16">
+  <h1 class="text-4xl font-extrabold mb-3">
+    Devenir Vendeur Premium 🚀
+  </h1>
+  <p class="opacity-90 text-lg">
+    Plus de visibilité • Plus de produits • Plus de ventes
+  </p>
+</header>
+
+<!-- CONTENT -->
+<section class="max-w-5xl mx-auto px-6 py-14">
+
+  <!-- PLAN -->
+  <div class="bg-white rounded-2xl shadow-xl p-10 text-center mb-14">
+    <span class="inline-block bg-yellow-100 text-yellow-700 px-4 py-1 rounded-full text-sm font-bold mb-4">
+      OFFRE POPULAIRE
+    </span>
+
+    <h2 class="text-3xl font-extrabold mb-4">
+      ⭐ Plan Premium
+    </h2>
+
+    <p class="text-gray-600 mb-6">
+      Accès complet pendant <strong>30 jours</strong>
+    </p>
+
+    <p class="text-5xl font-extrabold text-blue-700 mb-6">
+      1 000 HTG
+    </p>
+
+    <ul class="text-left max-w-md mx-auto space-y-3 text-gray-700 mb-8">
+      <li>✔ Jusqu’à <strong>100 produits</strong></li>
+      <li>✔ Mise en avant sur la page d’accueil</li>
+      <li>✔ Badge <strong>Vendeur Premium</strong></li>
+      <li>✔ Priorité dans les résultats</li>
+      <li>✔ Plus de crédibilité</li>
+    </ul>
+
+    <p class="text-sm text-gray-500">
+      Renouvelable chaque mois • Aucun engagement
+    </p>
+  </div>
+
+  <!-- PAIEMENT -->
+  <h3 class="text-2xl font-extrabold text-center mb-8">
+    Choisissez votre moyen de paiement
+  </h3>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+    <!-- MONCASH -->
+    <div class="bg-white rounded-xl shadow p-6 text-center border-t-4 border-blue-600">
+      <h4 class="font-bold text-lg mb-3">💰 MonCash</h4>
+      <p class="text-gray-600 mb-2">
+        Envoyez <strong>1 000 HTG</strong> au :
+      </p>
+      <p class="text-2xl font-extrabold text-blue-700 mb-3">
+        +509 39 40 23 40
+      </p>
+      <p class="text-sm text-gray-500">
+        Nom : Authentic Place
+      </p>
+    </div>
+
+    <!-- NATCASH -->
+    <div class="bg-white rounded-xl shadow p-6 text-center border-t-4 border-yellow-400">
+      <h4 class="font-bold text-lg mb-3">🏦 NatCash</h4>
+      <p class="text-gray-600 mb-2">
+        Envoyez <strong>1 000 HTG</strong> au :
+      </p>
+      <p class="text-2xl font-extrabold text-blue-700 mb-3">
+        +509 55 31 06 92
+      </p>
+      <p class="text-sm text-gray-500">
+        Nom : Authentic Place
+      </p>
+    </div>
+
+  </div>
+
+  <!-- CONFIRM -->
+  <div class="text-center mt-14">
+    <p class="text-gray-600 mb-4">
+      Après le paiement, confirmez via WhatsApp
+    </p>
+    <a href="https://wa.me/50955310692"
+       class="inline-block bg-green-600 text-white px-10 py-4 rounded-full font-bold hover:bg-green-700 shadow-lg">
+      📞 Confirmer mon paiement
+    </a>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-blue-700 text-white py-10 mt-16">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+
+    <div>
+      <h4 class="font-bold mb-2">Authentic Place</h4>
+      <p class="opacity-80">
+        Achetez & vendez en toute confiance.
+      </p>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Pages</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'about' %}" class="hover:underline">À propos</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:underline">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Légal</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'terms' %}" class="hover:underline">Conditions</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:underline">Confidentialité</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <p class="text-center text-xs opacity-70 mt-8">
+    © 2025 Authentic Place • Made in Haiti 🇭🇹
+  </p>
+</footer>
+
+</body>
+</html>

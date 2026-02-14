@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ vendor.name }} | Authentic Place</title>
+  <meta name="description" content="{% block meta_description %}Achetez et vendez localement sur Authentic Place.{% endblock %}">
+  <meta name="keywords" content="marketplace, haïti, vente en ligne, produits locaux">
+  <meta name="author" content="Authentic Place">
+
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="{% block og_title %}Authentic Place{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Marketplace locale fiable{% endblock %}">
+  <meta property="og:image" content="{% static 'images/og-image.png' %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'favicon-32x32.png' %}">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 font-sans text-gray-800">
+
+<!-- ================= NAVBAR ================= -->
+<nav class="bg-gradient-to-r from-blue-800 to-blue-600 text-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto flex justify-between items-center px-4 py-4">
+
+    <a href="{% url 'home' %}" class="flex items-center gap-3">
+      <img src="{% static 'logo-auth.png' %}" alt="Authentic Place" class="h-9">
+      <span class="text-lg sm:text-xl font-extrabold">
+        Authentic <span class="text-yellow-400">Place</span>
+      </span>
+    </a>
+
+    <!-- Desktop menu -->
+    <div class="hidden md:flex gap-6 text-sm font-semibold">
+      <a href="{% url 'home' %}" class="hover:text-yellow-300">Accueil</a>
+      <a href="#products" class="hover:text-yellow-300">Produits</a>
+      <a href="#contact" class="hover:text-yellow-300">Contact</a>
+    </div>
+
+    <!-- Mobile button -->
+    <button id="menuBtn" class="md:hidden text-2xl">☰</button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="hidden md:hidden bg-blue-700 px-4 pb-4 space-y-3 text-sm font-semibold">
+    <a href="{% url 'home' %}" class="block hover:text-yellow-300">Accueil</a>
+    <a href="#products" class="block hover:text-yellow-300">Produits</a>
+    <a href="#contact" class="block hover:text-yellow-300">Contact</a>
+  </div>
+</nav>
+
+<!-- ================= HEADER ================= -->
+<header class="bg-gradient-to-r from-blue-700 to-blue-500 text-white py-16 sm:py-20 text-center px-4">
+  <img
+    src="{% if vendor.image %}{{ vendor.image.url }}{% else %}{% static 'default_vendor.png' %}{% endif %}"
+    alt="{{ vendor.name }}"
+    class="w-24 h-24 sm:w-32 sm:h-32 mx-auto rounded-full object-cover border-4 border-yellow-400 shadow-xl mb-4">
+
+  <h1 class="text-3xl sm:text-4xl font-extrabold mb-2">{{ vendor.name }}</h1>
+
+  <p class="max-w-xl mx-auto text-sm sm:text-base opacity-90">
+    {{ vendor.description }}
+  </p>
+
+  {% if vendor.is_verified %}
+    <div class="mt-4 inline-block bg-yellow-400 text-blue-900 px-5 py-2 rounded-full font-extrabold shadow">
+      ✔ Vendeur vérifié
+    </div>
+  {% endif %}
+</header>
+
+<!-- ================= INFOS ================= -->
+<section id="contact" class="max-w-5xl mx-auto px-4 -mt-8">
+  <div class="bg-white rounded-2xl shadow-xl p-6 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+
+    {% if vendor.location %}
+    <div>
+      <p class="text-3xl mb-1">📍</p>
+      <p class="font-bold">Localisation</p>
+      <p class="text-gray-600 text-sm">{{ vendor.location }}</p>
+    </div>
+    {% endif %}
+
+    {% if vendor.whatsapp_number %}
+    <div>
+      <p class="text-3xl mb-1">📞</p>
+      <p class="font-bold">Téléphone</p>
+      <p class="text-gray-600 text-sm">{{ vendor.whatsapp_number }}</p>
+    </div>
+    {% endif %}
+
+    {% if vendor.whatsapp_number %}
+    <div>
+      <p class="text-3xl mb-1">💬</p>
+      <p class="font-bold">WhatsApp</p>
+      <a href="https://wa.me/{{ vendor.whatsapp_number }}"
+         target="_blank"
+         class="mt-2 inline-block bg-green-600 text-white px-6 py-2 rounded-full font-bold hover:bg-green-700 transition">
+        Contacter
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ================= PRODUITS ================= -->
+<section id="products" class="max-w-7xl mx-auto px-4 py-14">
+  <h2 class="text-2xl sm:text-3xl font-extrabold text-center mb-10">
+    Produits disponibles
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+    {% for product in products %}
+    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden">
+
+      <img
+        src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'default-product.png' %}{% endif %}"
+        alt="{{ product.name }}"
+        class="w-full h-48 object-cover">
+
+      <div class="p-5 flex flex-col">
+        <h3 class="text-lg font-bold mb-1">{{ product.name }}</h3>
+        <p class="text-blue-700 font-extrabold mb-4">{{ product.price }} HTG</p>
+
+        <a href="{% url 'product_detail' product.id %}"
+           class="mt-auto bg-blue-700 text-white py-3 rounded-xl text-center font-bold hover:bg-blue-800 transition">
+          Voir le produit
+        </a>
+      </div>
+    </div>
+    {% empty %}
+      <p class="col-span-full text-center text-gray-500">
+        Aucun produit disponible.
+      </p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-blue-700 text-white py-10 mt-16">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+
+    <div>
+      <h4 class="font-bold mb-2">Authentic Place</h4>
+      <p class="opacity-80">
+        Achetez & vendez en toute confiance.
+      </p>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Pages</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'about' %}" class="hover:underline">À propos</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:underline">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Légal</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'terms' %}" class="hover:underline">Conditions</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:underline">Confidentialité</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <p class="text-center text-xs opacity-70 mt-8">
+    © 2025 Authentic Place • Made in Haiti 🇭🇹
+  </p>
+</footer>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+  const btn = document.getElementById("menuBtn");
+  const menu = document.getElementById("mobileMenu");
+  btn.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
+  });
+</script>
+
+</body>
+</html>

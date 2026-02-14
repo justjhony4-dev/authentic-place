@@ -1,0 +1,360 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <!--<title>Authentic Place – Connecting Sellers & Buyers</title>-->
+  <title>{% block title %}Authentic Place – Marketplace locale{% endblock %}</title>
+
+  <meta name="description" content="{% block meta_description %}Achetez et vendez localement sur Authentic Place.{% endblock %}">
+  <meta name="keywords" content="marketplace, haïti, vente en ligne, produits locaux">
+  <meta name="author" content="Authentic Place">
+
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="{% block og_title %}Authentic Place{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Marketplace locale fiable{% endblock %}">
+  <meta property="og:image" content="{% static 'images/og-image.png' %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'favicon-32x32.png' %}">
+
+  <!-- Tailwind -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <style>
+    #backToTopBtn { display: none; }
+
+    .badge-premium {
+      background: linear-gradient(135deg, #facc15, #f59e0b);
+      color: #1e3a8a;
+      font-weight: 900;
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 4px 10px rgba(250, 204, 21, 0.6);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+<!-- ================= NAVBAR ================= -->
+<nav class="bg-gradient-to-r from-blue-800 to-blue-600 text-white sticky top-0 z-50 shadow-lg">
+  <div class="max-w-7xl mx-auto flex justify-between items-center px-4 py-4">
+
+    <a href="{% url 'home' %}" class="flex items-center space-x-3">
+      <img src="{% static 'logo-auth.png' %}" class="h-10">
+      <span class="text-2xl font-extrabold">
+        Authentic <span class="text-yellow-400">Place</span>
+      </span>
+    </a>
+
+    <div class="hidden md:flex space-x-6 text-sm font-semibold">
+      <a href="#home" class="hover:text-yellow-300">Accueil</a>
+      <a href="#vendor" class="hover:text-yellow-300">Vendeurs</a>
+      <a href="{% url 'vendor_register' %}" class="hover:text-yellow-300">Devenir vendeur</a>
+      <a href="{% url 'vendor_login' %}"
+         class="bg-yellow-400 text-blue-900 px-4 py-2 rounded-full font-bold">
+        Connexion
+      </a>
+    </div>
+
+    <button id="menuBtn" class="md:hidden">☰</button>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden bg-blue-700 px-4 pb-4">
+    <a href="#home" class="block py-2">Accueil</a>
+    <a href="#vendor" class="block py-2">Vendeurs</a>
+    <a href="{% url 'vendor_register' %}" class="block py-2">Devenir vendeur</a>
+    <a href="{% url 'vendor_login' %}"
+       class="block mt-2 bg-yellow-400 text-blue-900 text-center py-2 rounded-full font-bold">
+      Connexion
+    </a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header id="home" class="bg-gradient-to-r from-blue-700 to-blue-500 text-white text-center py-24 px-4">
+  <h1 class="text-5xl font-extrabold mb-4">Connecting Sellers & Buyers</h1>
+  <p class="max-w-xl mx-auto text-lg mb-6">
+    Achetez local. Vendez plus. Développez votre business.
+  </p>
+  <a href="{% url 'vendor_register' %}"
+     class="bg-yellow-400 text-blue-900 px-8 py-3 rounded-full font-bold">
+    Devenir vendeur
+  </a>
+</header>
+
+<!-- ================= SEARCH ================= -->
+<section class="-mt-12 px-4">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-xl">
+    <form method="get" class="flex">
+      <input type="text" name="q" value="{{ request.GET.q }}"
+             placeholder="Rechercher un produit ou un vendeur..."
+             class="flex-1 p-3 border rounded-l-lg">
+      <button class="bg-blue-700 text-white px-6 rounded-r-lg">
+        Rechercher
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="py-16 px-6">
+  <h2 class="text-3xl font-extrabold text-center mb-12">
+    Produits populaires
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+    {% for product in products %}
+      <a href="{% url 'product_detail' product.pk %}"
+         class="relative bg-white rounded-xl shadow hover:shadow-2xl transition">
+
+        {% if product.vendor.is_premium %}
+          <div class="absolute top-3 left-3 badge-premium">
+            ⭐ PREMIUM
+          </div>
+        {% endif %}
+
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'default-product.png' %}{% endif %}"
+             class="h-48 w-full object-cover rounded-t-xl">
+
+        <div class="p-4">
+          <h3 class="font-bold truncate">{{ product.name }}</h3>
+          <p class="text-sm text-gray-500">{{ product.description|truncatewords:10 }}</p>
+
+          <div class="flex justify-between items-center mt-4">
+            <span class="text-blue-700 font-extrabold">
+              {{ product.price }} HTG
+            </span>
+            <span class="text-xs bg-yellow-400 px-3 py-1 rounded-full font-bold">
+              Voir
+            </span>
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+
+    <!-- ================= PAGINATION ================= -->
+    {% if products.has_other_pages %}
+      <div class="flex justify-center items-center mt-12 space-x-2">
+
+      <   !-- Bouton précédent -->
+      {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}{% if query %}&q={{ query }}{% endif %}"
+          class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+          ← Précédent
+        </a>
+      {% else %}
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded">
+          ← Précédent
+        </span>
+      {% endif %}
+
+      <!-- Pages numérotées -->
+      {% for num in products.paginator.page_range %}
+        {% if products.number == num %}
+          <span class="px-4 py-2 bg-blue-700 text-white rounded font-bold">
+            {{ num }}
+          </span>
+        {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+          <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}"
+            class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+            {{ num }}
+          </a>
+        {% endif %}
+      {% endfor %}
+
+      <!-- Bouton suivant -->
+      {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}{% if query %}&q={{ query }}{% endif %}"
+          class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+          Suivant →
+        </a>
+      {% else %}
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded">
+          Suivant →
+        </span>
+      {% endif %}
+
+    </div>
+    {% endif %}
+
+  </div>
+  
+</section>
+
+<!-- ================= VENDORS ================= -->
+<section id="vendor" class="bg-white py-16 px-6">
+  <h2 class="text-3xl font-extrabold text-center mb-12">
+    Vendeurs de confiance
+    <span class="block text-sm text-yellow-500 mt-2">
+      ⭐ Les vendeurs Premium apparaissent en premier
+    </span>
+  </h2>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+    {% for vendor in vendors %}
+      <a href="{% url 'vendor_detail' vendor.pk %}"
+         class="bg-gray-50 p-6 rounded-xl shadow hover:shadow-xl text-center">
+
+        <img src="{% if vendor.image %}{{ vendor.image.url }}{% else %}{% static 'default_vendor.png' %}{% endif %}"
+             class="w-24 h-24 mx-auto rounded-full mb-4 border-2 border-blue-600">
+
+        <div class="flex justify-center items-center gap-2">
+          <h3 class="font-bold">{{ vendor.name }}</h3>
+
+          {% if vendor.is_premium %}
+            <span class="badge-premium">⭐ PREMIUM</span>
+          {% endif %}
+        </div>
+
+        <p class="text-sm text-gray-600 mt-1">
+          {{ vendor.description|truncatewords:8 }}
+        </p>
+
+        {% if vendor.is_verified %}
+          <span class="inline-block mt-3 text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold">
+            ✔ Vérifié
+          </span>
+        {% endif %}
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ================= PREMIUM SECTION ================= -->
+<section class="bg-gradient-to-r from-blue-700 to-blue-500 py-20 px-6 text-white">
+  <div class="max-w-6xl mx-auto text-center">
+
+    <!-- TITRE -->
+    <h2 class="text-4xl font-extrabold mb-4">
+      Pourquoi devenir <span class="text-yellow-400">Vendeur Premium</span> ?
+    </h2>
+
+    <p class="max-w-2xl mx-auto text-lg opacity-90 mb-14">
+      Débloquez plus de visibilité, plus de ventes et développez votre business
+      plus rapidement sur <strong>Authentic Place</strong>.
+    </p>
+
+    <!-- AVANTAGES -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      <!-- AVANTAGE 1 -->
+      <div class="bg-white text-gray-800 p-6 rounded-2xl shadow-xl">
+        <div class="text-4xl mb-4">🏆</div>
+        <h3 class="font-bold text-lg mb-2">Priorité d’affichage</h3>
+        <p class="text-sm text-gray-600">
+          Vos produits et votre boutique apparaissent en premier
+          sur la page d’accueil.
+        </p>
+      </div>
+
+      <!-- AVANTAGE 2 -->
+      <div class="bg-white text-gray-800 p-6 rounded-2xl shadow-xl">
+        <div class="text-4xl mb-4">📦</div>
+        <h3 class="font-bold text-lg mb-2">Plus de produits</h3>
+        <p class="text-sm text-gray-600">
+          Passez de <strong>5 produits gratuits</strong> à une capacité
+          étendue pour vendre sans limite.
+        </p>
+      </div>
+
+      <!-- AVANTAGE 3 -->
+      <div class="bg-white text-gray-800 p-6 rounded-2xl shadow-xl">
+        <div class="text-4xl mb-4">✔</div>
+        <h3 class="font-bold text-lg mb-2">Badge Premium</h3>
+        <p class="text-sm text-gray-600">
+          Gagnez la confiance des clients grâce à un badge
+          Premium visible sur votre boutique.
+        </p>
+      </div>
+
+      <!-- AVANTAGE 4 -->
+      <div class="bg-white text-gray-800 p-6 rounded-2xl shadow-xl">
+        <div class="text-4xl mb-4">📞</div>
+        <h3 class="font-bold text-lg mb-2">Contact facilité</h3>
+        <p class="text-sm text-gray-600">
+          Les clients vous contactent plus facilement via WhatsApp
+          pour conclure plus de ventes.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-16">
+      <a href="{% url 'premium' %}"
+         class="inline-block bg-yellow-400 text-blue-900 px-10 py-4 rounded-full
+                font-extrabold text-lg hover:bg-yellow-300 transition shadow-lg">
+        🚀 Devenir Vendeur Premium
+      </a>
+
+      <p class="text-sm opacity-80 mt-4">
+        Paiement simple via MonCash ou NatCash
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-blue-700 text-white py-10 mt-16">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+
+    <div>
+      <h4 class="font-bold mb-2">Authentic Place</h4>
+      <p class="opacity-80">
+        Achetez & vendez en toute confiance.
+      </p>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Pages</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'about' %}" class="hover:underline">À propos</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:underline">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Légal</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'terms' %}" class="hover:underline">Conditions</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:underline">Confidentialité</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <p class="text-center text-xs opacity-70 mt-8">
+    © 2025 Authentic Place • Made in Haiti 🇭🇹
+  </p>
+</footer>
+
+
+<button id="backToTopBtn"
+  onclick="window.scrollTo({top:0, behavior:'smooth'})"
+  class="fixed bottom-6 right-6 bg-blue-700 text-white p-3 rounded-full shadow-lg">
+  ↑
+</button>
+
+<script>
+  const btn = document.getElementById("backToTopBtn");
+  const menuBtn = document.getElementById("menuBtn");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  window.onscroll = () => btn.style.display = window.scrollY > 300 ? "block" : "none";
+  menuBtn.onclick = () => mobileMenu.classList.toggle("hidden");
+</script>
+
+</body>
+</html>

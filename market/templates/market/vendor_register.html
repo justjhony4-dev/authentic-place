@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentic Place | Inscription</title>
+  <meta name="description" content="{% block meta_description %}Achetez et vendez localement sur Authentic Place.{% endblock %}">
+  <meta name="keywords" content="marketplace, haïti, vente en ligne, produits locaux">
+  <meta name="author" content="Authentic Place">
+
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="{% block og_title %}Authentic Place{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Marketplace locale fiable{% endblock %}">
+  <meta property="og:image" content="{% static 'images/og-image.png' %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+<!-- NAVBAR -->
+<nav class="bg-blue-800 text-white sticky top-0 z-50 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+
+    <a href="{% url 'home' %}" class="flex items-center space-x-3">
+      <!-- LOGO PLUS CLAIR -->
+      <div class="bg-white rounded-full p-1 shadow-md">
+        <img src="{% static 'logo-auth.png' %}"
+             alt="Authentic Place"
+             class="h-10 w-10 object-contain">
+      </div>
+      <span class="text-xl font-extrabold tracking-wide">Authentic Place</span>
+    </a>
+
+    <div class="hidden md:flex space-x-6 text-sm font-semibold">
+      <a href="{% url 'home' %}" class="hover:text-yellow-300 transition">Accueil</a>
+      <a href="{% url 'vendor_register' %}" class="hover:text-yellow-300 transition">Devenir vendeur</a>
+      <a href="{% url 'vendor_login' %}"
+         class="bg-yellow-400 text-blue-900 px-4 py-2 rounded-full hover:bg-yellow-300 transition font-bold">
+        Connexion
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER / BANNIÈRE -->
+<header class="bg-gradient-to-r from-blue-800 via-blue-700 to-blue-600 text-white py-20 text-center">
+
+  <!-- LOGO MIS EN VALEUR -->
+  <div class="flex justify-center mb-6">
+    <div class="bg-white rounded-full p-4 shadow-xl">
+      <img src="{% static 'logo-auth.png' %}"
+           alt="Authentic Place"
+           class="h-24 w-24 object-contain">
+    </div>
+  </div>
+
+  <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+    Rejoignez <span class="text-yellow-400">Authentic Place</span>
+  </h1>
+
+  <p class="max-w-xl mx-auto text-lg text-blue-100">
+    Créez votre boutique et commencez à vendre facilement.
+  </p>
+</header>
+
+<!-- FORMULAIRE -->
+<section class="max-w-2xl mx-auto bg-white p-10 rounded-2xl shadow-xl -mt-16 relative z-10">
+  <h2 class="text-2xl font-bold mb-8 text-center text-blue-800">
+    Inscription Vendeur
+  </h2>
+
+  <form method="POST" enctype="multipart/form-data" class="space-y-8">
+    {% csrf_token %}
+
+    <!-- COMPTE -->
+    <div>
+      <h3 class="font-semibold text-gray-700 mb-4">Informations du compte</h3>
+      <div class="space-y-4">
+        {% for field in user_form %}
+          <div>
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}
+              <p class="text-red-600 text-sm">{{ field.errors }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- PROFIL -->
+    <div>
+      <h3 class="font-semibold text-gray-700 mb-4">Profil du vendeur</h3>
+      <div class="space-y-4">
+        {% for field in vendor_form %}
+          <div>
+            {{ field.label_tag }}
+
+            {% if field.name == "image" %}
+              <label for="{{ field.id_for_label }}"
+                     class="inline-block bg-blue-700 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-800 transition">
+                Choisir une image
+              </label>
+              {{ field }}
+
+              <div id="image-preview" class="mt-4 hidden">
+                <img id="preview-img"
+                     class="w-32 h-32 object-cover rounded-xl border shadow">
+              </div>
+            {% else %}
+              {{ field }}
+            {% endif %}
+
+            {% if field.errors %}
+              <p class="text-red-600 text-sm">{{ field.errors }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <button type="submit"
+            class="w-full bg-yellow-400 text-blue-900 py-3 rounded-xl font-bold hover:bg-yellow-300 transition">
+      S'inscrire
+    </button>
+  </form>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-blue-700 text-white py-10 mt-16">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+
+    <div>
+      <h4 class="font-bold mb-2">Authentic Place</h4>
+      <p class="opacity-80">
+        Achetez & vendez en toute confiance.
+      </p>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Pages</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'about' %}" class="hover:underline">À propos</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:underline">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Légal</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'terms' %}" class="hover:underline">Conditions</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:underline">Confidentialité</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <p class="text-center text-xs opacity-70 mt-8">
+    © 2025 Authentic Place • Made in Haiti 🇭🇹
+  </p>
+</footer>
+
+<!-- IMAGE PREVIEW -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.querySelector('input[type="file"]');
+  const preview = document.getElementById('image-preview');
+  const img = document.getElementById('preview-img');
+
+  if (input) {
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          img.src = e.target.result;
+          preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <meta name="description" content="{% block meta_description %}Achetez et vendez localement sur Authentic Place.{% endblock %}">
+  <meta name="keywords" content="marketplace, haïti, vente en ligne, produits locaux">
+  <meta name="author" content="Authentic Place">
+
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="{% block og_title %}Authentic Place{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Marketplace locale fiable{% endblock %}">
+  <meta property="og:image" content="{% static 'images/og-image.png' %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'favicon-32x32.png' %}">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+<!-- ================= NAVBAR ================= -->
+<nav class="bg-blue-700 text-white sticky top-0 z-50 shadow">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+
+    <!-- LOGO -->
+    <a href="{% url 'home' %}" class="flex items-center space-x-2">
+      <img src="{% static 'logo-auth.png' %}" class="h-9 w-9 object-contain">
+      <span class="text-lg font-extrabold">
+        Authentic <span class="text-yellow-400">Place</span>
+      </span>
+    </a>
+
+    <!-- MENU DESKTOP -->
+    <div class="hidden md:flex items-center space-x-6 text-sm font-semibold">
+      <a href="{% url 'home' %}" class="hover:text-yellow-400">Accueil</a>
+      <a href="{% url 'vendor_register' %}" class="hover:text-yellow-400">Devenir vendeur</a>
+      <a href="{% url 'vendor_login' %}"
+         class="bg-yellow-400 text-blue-900 px-4 py-2 rounded-full hover:bg-yellow-500 transition">
+        Connexion
+      </a>
+    </div>
+
+    <!-- BOUTON MOBILE -->
+    <button id="menuBtn" class="md:hidden text-2xl focus:outline-none">
+      ☰
+    </button>
+  </div>
+
+  <!-- MENU MOBILE -->
+  <div id="mobileMenu" class="hidden md:hidden bg-blue-800 px-4 pb-4 space-y-3 text-sm font-semibold">
+    <a href="{% url 'home' %}" class="block hover:text-yellow-400">Accueil</a>
+    <a href="{% url 'vendor_register' %}" class="block hover:text-yellow-400">Devenir vendeur</a>
+    <a href="{% url 'vendor_login' %}"
+       class="block bg-yellow-400 text-blue-900 px-4 py-2 rounded-md text-center font-bold">
+      Connexion
+    </a>
+  </div>
+</nav>
+
+<!-- ================= HEADER ================= -->
+<header class="bg-blue-600 text-white text-center py-14 px-4">
+  <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3">
+    {{ title }}
+  </h1>
+  <p class="max-w-xl mx-auto text-base sm:text-lg opacity-90">
+    Remplissez ce formulaire pour ajouter un produit à votre boutique.
+  </p>
+</header>
+
+<!-- ================= FORMULAIRE ================= -->
+<section class="max-w-2xl mx-auto bg-white px-6 sm:px-10 py-8 rounded-xl shadow-lg -mt-10 relative z-10">
+  <form method="POST" enctype="multipart/form-data" class="space-y-6">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div class="flex flex-col">
+        {% if field.name == 'image' %}
+          <label for="image-upload"
+                 class="bg-blue-700 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-blue-800 w-fit text-sm font-semibold">
+            Choisir une image
+          </label>
+          {{ field }}
+
+          <div id="image-preview" class="mt-4 hidden">
+            <img id="preview-img"
+                 class="w-32 h-32 object-cover rounded-lg border border-gray-300">
+          </div>
+        {% else %}
+          <label class="text-sm font-semibold text-gray-700 mb-1">
+            {{ field.label }}
+          </label>
+          {{ field }}
+        {% endif %}
+
+        {% if field.errors %}
+          <p class="text-red-600 text-sm mt-1">{{ field.errors }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <button type="submit"
+            class="w-full bg-yellow-400 text-blue-900 py-3 rounded-lg font-bold hover:bg-yellow-500 transition">
+      Enregistrer
+    </button>
+  </form>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-blue-900 text-white py-10 mt-16">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+
+    <div>
+      <h4 class="font-bold mb-2">Authentic Place</h4>
+      <p class="opacity-80">Connecting Sellers & Buyers</p>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Pages</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'about' %}" class="hover:text-yellow-400">À propos</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:text-yellow-400">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Légal</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'terms' %}" class="hover:text-yellow-400">Conditions</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:text-yellow-400">Confidentialité</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="text-center text-xs opacity-70 mt-8">
+    © 2025 Authentic Place • Made in Haiti 🇭🇹
+  </p>
+</footer>
+
+<!-- ================= SCRIPT MENU MOBILE ================= -->
+<script>
+  const btn = document.getElementById("menuBtn");
+  const menu = document.getElementById("mobileMenu");
+
+  btn.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
+  });
+</script>
+
+</body>
+</html>

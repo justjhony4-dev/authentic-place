@@ -1,0 +1,257 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Vendeur | Authentic Place</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% block meta_description %}Achetez et vendez localement sur Authentic Place.{% endblock %}">
+  <meta name="keywords" content="marketplace, haïti, vente en ligne, produits locaux">
+  <meta name="author" content="Authentic Place">
+
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:title" content="{% block og_title %}Authentic Place{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Marketplace locale fiable{% endblock %}">
+  <meta property="og:image" content="{% static 'images/og-image.png' %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:type" content="website">
+  <!-- FAVICON -->
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="apple-touch-icon" href="{% static 'favicon-32x32.png' %}">
+
+  <!-- TAILWIND -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    .badge-premium {
+      background: linear-gradient(135deg, #facc15, #f59e0b);
+      color: #1e3a8a;
+      font-weight: 900;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      box-shadow: 0 4px 12px rgba(250,204,21,.6);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+<!-- NAVBAR -->
+<nav class="bg-gradient-to-r from-blue-800 to-blue-600 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+
+    <a href="{% url 'home' %}" class="flex items-center gap-3">
+      <img src="{% static 'logo-auth.png' %}" class="h-10" alt="Authentic Place">
+      <span class="text-xl font-extrabold">
+        Authentic <span class="text-yellow-400">Place</span>
+      </span>
+    </a>
+
+    <div class="hidden md:flex gap-6 font-semibold">
+      <a href="{% url 'home' %}">Accueil</a>
+      <a href="{% url 'vendor_dashboard' %}">Dashboard</a>
+      <a href="{% url 'vendor_logout' %}"
+         class="bg-white text-blue-800 px-4 py-2 rounded-full font-bold hover:bg-yellow-400">
+        Déconnexion
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header class="bg-gradient-to-r from-blue-700 to-blue-500 text-white text-center py-12">
+  <img
+    src="{% if vendor.image %}{{ vendor.image.url }}{% else %}{% static 'default_vendor.png' %}{% endif %}"
+    alt="{{ vendor.name }}"
+    class="w-24 h-24 sm:w-32 sm:h-32 mx-auto rounded-full object-cover border-4 border-yellow-400 shadow-xl mb-4">
+  <h1 class="text-4xl font-extrabold">Bienvenue, {{ vendor.name }}</h1>
+  <p class="opacity-90 mt-2">Tableau de bord vendeur</p>
+
+  {% if vendor.subscription_plan == 'premium' %}
+    <div class="mt-4 flex justify-center">
+      <span class="badge-premium">⭐ COMPTE PREMIUM</span>
+    </div>
+  {% endif %}
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-10">
+
+  <!-- STATS -->
+  <section class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+
+    <div class="bg-white p-6 rounded-xl shadow text-center">
+      <p class="text-gray-500 text-sm">Produits</p>
+      <p class="text-3xl font-extrabold text-blue-700">
+        {{ products.paginator.count }} / {{ vendor.product_limit }}
+      </p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow text-center">
+      <p class="text-gray-500 text-sm">Abonnement</p>
+      {% if vendor.subscription_plan == 'premium' %}
+        <p class="text-yellow-500 font-extrabold">⭐ Premium</p>
+        <p class="text-xs text-gray-500 mt-1">
+          Jusqu’au {{ vendor.subscription_end }}
+        </p>
+      {% else %}
+        <p class="font-bold">Gratuit</p>
+        <p class="text-xs text-gray-500 mt-1">
+          Limité à {{ vendor.product_limit }} produits
+        </p>
+      {% endif %}
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow text-center">
+      <p class="text-gray-500 text-sm">Statut</p>
+      {% if vendor.is_verified %}
+        <p class="text-green-600 font-bold">✔ Vérifié</p>
+      {% else %}
+        <p class="text-yellow-600 font-bold">⏳ En attente</p>
+      {% endif %}
+    </div>
+
+  </section>
+
+  <!-- ACTION BAR -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-extrabold">Vos produits</h2>
+
+    {% if products.paginator.count < vendor.product_limit %}
+      <a href="{% url 'add_product' %}"
+         class="bg-blue-700 text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-800">
+        + Ajouter
+      </a>
+    {% else %}
+      <span class="bg-gray-300 px-6 py-2 rounded-lg text-gray-600 font-semibold">
+        Limite atteinte
+      </span>
+    {% endif %}
+  </div>
+
+  <!-- PRODUITS -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    {% for product in products %}
+      <div class="bg-white rounded-xl shadow overflow-hidden">
+        <img
+          src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'default-product.png' %}{% endif %}"
+          class="h-48 w-full object-cover"
+          alt="{{ product.name }}">
+
+        <div class="p-4">
+          <h3 class="font-bold">{{ product.name }}</h3>
+          <p class="text-blue-700 font-extrabold mt-1">
+            {{ product.price }} HTG
+          </p>
+
+          <div class="flex gap-4 mt-4 text-sm">
+            <a href="{% url 'edit_product' product.id %}" class="text-blue-600">Modifier</a>
+            <a href="{% url 'delete_product' product.id %}"
+               onclick="return confirm('Supprimer ce produit ?')"
+               class="text-red-600">
+              Supprimer
+            </a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="col-span-full text-center text-gray-500">
+        Aucun produit ajouté pour le moment.
+      </p>
+    {% endfor %}
+  </section>
+
+  <!-- PAGINATION -->
+  {% if products.has_other_pages %}
+  <div class="flex justify-center mt-10 space-x-2">
+
+    {% if products.has_previous %}
+      <a href="?page={{ products.previous_page_number }}"
+         class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+        ← Précédent
+      </a>
+    {% endif %}
+
+    {% for num in products.paginator.page_range %}
+      {% if products.number == num %}
+        <span class="px-4 py-2 bg-blue-700 text-white rounded font-bold">
+          {{ num }}
+        </span>
+      {% elif num >= products.number|add:'-2' and num <= products.number|add:'2' %}
+        <a href="?page={{ num }}"
+           class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+          {{ num }}
+        </a>
+      {% endif %}
+    {% endfor %}
+
+    {% if products.has_next %}
+      <a href="?page={{ products.next_page_number }}"
+         class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+        Suivant →
+      </a>
+    {% endif %}
+
+  </div>
+  {% endif %}
+
+  <!-- UPGRADE -->
+  {% if vendor.subscription_plan == 'free' %}
+  <section class="mt-14 bg-yellow-50 border border-yellow-300 p-8 rounded-xl text-center">
+    <h3 class="text-2xl font-extrabold text-yellow-600 mb-3">
+      🚀 Passez en Premium
+    </h3>
+    <p class="text-gray-700 mb-6">
+      Plus de produits • Plus de visibilité • Badge Premium
+    </p>
+    <a href="{% url 'premium' %}"
+       class="bg-yellow-400 text-blue-900 px-10 py-4 rounded-full font-extrabold hover:bg-yellow-300">
+      Passer au Premium
+    </a>
+    <p class="text-xs text-gray-500 mt-3">
+      Paiement via MonCash / NatCash
+    </p>
+  </section>
+  {% endif %}
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-blue-700 text-white py-10 mt-16">
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+
+    <div>
+      <h4 class="font-bold mb-2">Authentic Place</h4>
+      <p class="opacity-80">
+        Achetez & vendez en toute confiance.
+      </p>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Pages</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'about' %}" class="hover:underline">À propos</a></li>
+        <li><a href="{% url 'contact' %}" class="hover:underline">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 class="font-bold mb-2">Légal</h4>
+      <ul class="space-y-1 opacity-90">
+        <li><a href="{% url 'terms' %}" class="hover:underline">Conditions</a></li>
+        <li><a href="{% url 'privacy' %}" class="hover:underline">Confidentialité</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <p class="text-center text-xs opacity-70 mt-8">
+    © 2025 Authentic Place • Made in Haiti 🇭🇹
+  </p>
+</footer>
+
+</body>
+</html>
