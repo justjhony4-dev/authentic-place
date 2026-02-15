@@ -4,22 +4,12 @@
 # Python
 __pycache__/
 *.py[cod]
-*.sqlite3
 
-# Media & static
-/media/
-/staticfiles/
+# Static collected
+staticfiles/
+
+# Media (optionnel)
+media/
 
 # Virtual environment
 venv/
-.env/
-.env
-db.sqlite3
-media/
-staticfiles/
-front-end/
-*.png
-*.jpg
-*.jpeg
-*.mp4
-*.exe
