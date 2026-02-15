@@ -6,7 +6,7 @@ VERSION PRODUCTION OFFICIELLE - Render Ready
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-
+import dj_database_url
 
 # ======================================================
 # BASE DIRECTORY
@@ -141,21 +141,23 @@ WSGI_APPLICATION = 'authentic_place.wsgi.application'
 
 
 # ======================================================
-# DATABASE
+# DATABASE (POSTGRESQL RENDER READY)
 # ======================================================
+
 
 DATABASES = {
 
-    'default': {
+    'default': dj_database_url.config(
 
-        'ENGINE': 'django.db.backends.sqlite3',
+        default=os.getenv("DATABASE_URL"),
 
-        'NAME': BASE_DIR / 'db.sqlite3',
+        conn_max_age=600,
 
-    }
+        ssl_require=True
+
+    )
 
 }
-
 
 # ======================================================
 # PASSWORD VALIDATION
