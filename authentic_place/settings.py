@@ -1,12 +1,13 @@
 """
 Django settings for authentic_place project.
-VERSION PRODUCTION OFFICIELLE - Render Ready
+VERSION PRODUCTION OFFICIELLE - Render Ready (FIXED)
 """
 
 from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
+
 
 # ======================================================
 # BASE DIRECTORY
@@ -35,11 +36,9 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 
 ALLOWED_HOSTS = [
-
     ".onrender.com",
     "localhost",
     "127.0.0.1",
-
 ]
 
 
@@ -141,23 +140,38 @@ WSGI_APPLICATION = 'authentic_place.wsgi.application'
 
 
 # ======================================================
-# DATABASE (POSTGRESQL RENDER READY)
+# DATABASE (RENDER SAFE VERSION)
 # ======================================================
 
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-DATABASES = {
+if DATABASE_URL:
 
-    'default': dj_database_url.config(
+    DATABASES = {
 
-        default=os.getenv("DATABASE_URL"),
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
 
-        conn_max_age=600,
+    }
 
-        ssl_require=True
+else:
 
-    )
+    # fallback local dev
+    DATABASES = {
 
-}
+        'default': {
+
+            'ENGINE': 'django.db.backends.sqlite3',
+
+            'NAME': BASE_DIR / 'db.sqlite3',
+
+        }
+
+    }
+
 
 # ======================================================
 # PASSWORD VALIDATION
@@ -198,37 +212,28 @@ USE_TZ = True
 
 
 # ======================================================
-# STATIC FILES CONFIGURATION (CRITIQUE POUR RENDER)
+# STATIC FILES (FIX CRITICAL RENDER BUG)
 # ======================================================
 
 STATIC_URL = '/static/'
 
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-
-STATICFILES_DIRS = [
-
-    BASE_DIR / "market/static",
-
-]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
-STORAGES = {
+# IMPORTANT FIX
 
-    "default": {
+STATICFILES_DIRS = []
 
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+LOCAL_STATIC = BASE_DIR / "market/static"
 
-    },
+if LOCAL_STATIC.exists():
 
-    "staticfiles": {
+    STATICFILES_DIRS.append(LOCAL_STATIC)
 
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
 
-    },
+# WhiteNoise storage
 
-}
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # ======================================================
@@ -237,7 +242,7 @@ STORAGES = {
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # ======================================================
@@ -259,26 +264,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ======================================================
-# RENDER SECURITY CONFIG
+# RENDER SECURITY FIX
 # ======================================================
 
-if not DEBUG:
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-    SECURE_SSL_REDIRECT = False
+
+if not DEBUG:
 
     SESSION_COOKIE_SECURE = True
 
     CSRF_COOKIE_SECURE = True
 
-    SECURE_BROWSER_XSS_FILTER = True
-
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-
-    X_FRAME_OPTIONS = "DENY"
-
 else:
-
-    SECURE_SSL_REDIRECT = False
 
     SESSION_COOKIE_SECURE = False
 
