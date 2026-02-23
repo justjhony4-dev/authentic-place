@@ -1,6 +1,6 @@
 """
 Django settings for authentic_place project.
-VERSION PRODUCTION OFFICIELLE - Render Ready (FIXED)
+AUTHENTIC PLACE PRO VERSION – IMAGEKIT READY – RENDER READY
 """
 
 from pathlib import Path
@@ -33,7 +33,6 @@ SECRET_KEY = os.getenv(
 )
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
-
 
 ALLOWED_HOSTS = [
     ".onrender.com",
@@ -140,7 +139,7 @@ WSGI_APPLICATION = 'authentic_place.wsgi.application'
 
 
 # ======================================================
-# DATABASE (RENDER SAFE VERSION)
+# DATABASE
 # ======================================================
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -159,7 +158,6 @@ if DATABASE_URL:
 
 else:
 
-    # fallback local dev
     DATABASES = {
 
         'default': {
@@ -212,32 +210,35 @@ USE_TZ = True
 
 
 # ======================================================
-# STATIC FILES (FIX CRITICAL RENDER BUG)
+# STATIC FILES
 # ======================================================
 
 STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+STATICFILES_DIRS = [
 
-# IMPORTANT FIX
+    BASE_DIR / "market/static",
 
-STATICFILES_DIRS = []
-
-LOCAL_STATIC = BASE_DIR / "market/static"
-
-if LOCAL_STATIC.exists():
-
-    STATICFILES_DIRS.append(LOCAL_STATIC)
-
-
-# WhiteNoise storage
+]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # ======================================================
-# MEDIA FILES
+# IMAGEKIT CONFIGURATION (CRITICAL)
+# ======================================================
+
+IMAGEKIT_PUBLIC_KEY = 'public_xjvlVVVrvRLXi1e/p/lv8hv70mE='
+
+IMAGEKIT_PRIVATE_KEY = 'private_f8+g************************'
+
+IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/jhonsain77'
+
+
+# ======================================================
+# MEDIA FILES (ImageKit handles storage)
 # ======================================================
 
 MEDIA_URL = '/media/'
@@ -264,7 +265,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ======================================================
-# RENDER SECURITY FIX
+# SECURITY
 # ======================================================
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
