@@ -124,7 +124,7 @@
           </div>
         {% endif %}
 
-        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'default-product.png' %}{% endif %}"
+        <img src="{% if product.image %}{{ product.image }}{% else %}{% static 'default-product.png' %}{% endif %}"
              class="h-48 w-full object-cover rounded-t-xl">
 
         <div class="p-4">
@@ -206,7 +206,7 @@
       <a href="{% url 'vendor_detail' vendor.pk %}"
          class="bg-gray-50 p-6 rounded-xl shadow hover:shadow-xl text-center">
 
-        <img src="{% if vendor.image %}{{ vendor.image.url }}{% else %}{% static 'default_vendor.png' %}{% endif %}"
+        <img src="{% if vendor.image %}{{ vendor.image }}{% else %}{% static 'default_vendor.png' %}{% endif %}"
              class="w-24 h-24 mx-auto rounded-full mb-4 border-2 border-blue-600">
 
         <div class="flex justify-center items-center gap-2">
