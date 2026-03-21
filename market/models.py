@@ -34,10 +34,10 @@ class Vendor(models.Model):
     )
 
     # IMAGE STOCKEE SUR IMAGEKIT
-    image = models.ImageField(
-        upload_to='vendors/',
-        null=True,
-        blank=True
+    image = models.URLField(
+        max_length=500,
+        blank=True,
+        null=True
     )
 
 
@@ -165,14 +165,10 @@ class Product(models.Model):
 
     # IMAGE IMAGEKIT READY
 
-    image = models.ImageField(
-
-        upload_to='products/',
-
-        null=True,
-
-        blank=True
-
+    image = models.URLField(
+        max_length=500,
+        blank=True,
+        null=True
     )
 
 

@@ -230,6 +230,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # IMAGEKIT CONFIGURATION (CRITICAL)
 # ======================================================
 
+DEFAULT_FILE_STORAGE = 'imagekitio.storage.ImageKitStorage'
+
 IMAGEKIT_PUBLIC_KEY = 'public_xjvlVVVrvRLXi1e/p/lv8hv70mE='
 
 IMAGEKIT_PRIVATE_KEY = 'private_f8+g************************'
